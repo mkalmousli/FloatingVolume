@@ -2,7 +2,7 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(
   PigeonOptions(
-    dartOut: 'lib/src/native_events.g.dart',
+    dartOut: 'lib/generated/native_events.g.dart',
     dartOptions: DartOptions(),
     kotlinOut:
         'android/app/src/main/kotlin/dev/flutter/floating_volume/NativeEvents.g.kt',
