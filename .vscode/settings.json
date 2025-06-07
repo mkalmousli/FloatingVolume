@@ -1,0 +1,23 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+
+        ".idea": true,
+        ".dart_tool": true,
+        ".metadata": true,
+        "floating_volume.iml": true,
+        "pubspec.lock": true,
+        
+        "ios": true,
+        "web": true,
+        "android": true,
+        "build": true,
+        "macos": true,
+        "linux": true,
+        "windows": true
+    }
+}
