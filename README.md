@@ -12,12 +12,12 @@
 <table>
     <tr>
         <td>
-            <img src="screenshots/01.png" width="150px" />
-            <img src="screenshots/02.png" width="150px" />
-            <img src="screenshots/03.png" width="150px" />
-            <img src="screenshots/04.png" width="150px" />
-            <img src="screenshots/05.png" width="150px" />
-            <img src="screenshots/06.png" width="150px" />
+            <img src="screenshots/output/01.png" width="150px" />
+            <img src="screenshots/output/02.png" width="150px" />
+            <img src="screenshots/output/03.png" width="150px" />
+            <img src="screenshots/output/04.png" width="150px" />
+            <img src="screenshots/output/05.png" width="150px" />
+            <img src="screenshots/output/06.png" width="150px" />
         </td>
     </tr>
 </table>
