@@ -36,6 +36,10 @@ dart run pigeon --input pigeons/native_events.dart
 
 Then, you should be able to build it with flutter.
 
+```bash
+flutter build apk --release
+```
+
 ## License
 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)  
 
