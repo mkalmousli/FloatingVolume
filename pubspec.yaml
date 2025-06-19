@@ -12,6 +12,21 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  permission_handler: ^12.0.0+1
+
+  bloc:
+  flutter_bloc:
+
+  volume_controller: ^3.4.0
+
+  flutter_svg: ^2.1.0
+
+  gap:
+
+  freezed_annotation: 
+
+  url_launcher: 
+
 
 dev_dependencies:
   flutter_test:
@@ -21,5 +36,12 @@ dev_dependencies:
 
   pigeon:
 
+  build_runner: 
+  freezed:
+
 flutter:
   uses-material-design: true
+
+  assets:
+    - images/
+    - LICENSE

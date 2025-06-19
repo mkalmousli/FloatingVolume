@@ -1,6 +1,26 @@
-# FloatingVolume [WIP]
+<p align="center">
+    <img src="logo.svg" width="200px" />
+</p>
+<h1 align="center">Floating Volume</h1>
+<p align="center">
+    Control your device’s volume anywhere with a floating slider on Android.
+</p>
 
-Control your device’s volume with a floating slider on Android.
+
+## Screenshots
+
+<table>
+    <tr>
+        <td>
+            <img src="screenshots/01.png" width="150px" />
+            <img src="screenshots/02.png" width="150px" />
+            <img src="screenshots/03.png" width="150px" />
+            <img src="screenshots/04.png" width="150px" />
+            <img src="screenshots/05.png" width="150px" />
+            <img src="screenshots/06.png" width="150px" />
+        </td>
+    </tr>
+</table>
 
 
 ## Build
@@ -13,3 +33,10 @@ Generate code with:
 dart run pigeon --input pigeons/native_api.dart
 dart run pigeon --input pigeons/native_events.dart
 ```
+
+Then, you should be able to build it with flutter.
+
+## License
+[![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)  
+
+Floating Volume is Free Software: You can use, study, share, and improve it at will. Specifically you can redistribute and/or modify it under the terms of the [GNU General Public License](https://www.gnu.org/licenses/gpl.html) as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.

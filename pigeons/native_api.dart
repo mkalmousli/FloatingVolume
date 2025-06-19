@@ -51,4 +51,15 @@ abstract class NativeApi {
   ///
   @async
   void setMinVolume(int minVolume);
+
+  ///
+  /// Show a toast
+  ///
+  @async
+  void showToast(
+    String message, [
+    ToastDuration duration = ToastDuration.short,
+  ]);
 }
+
+enum ToastDuration { short, long }

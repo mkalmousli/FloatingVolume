@@ -1,0 +1,5 @@
+Floating Volume lets you control your Android device’s volume with a simple floating slider. 
+
+Instantly adjust the volume from anywhere, without leaving your current app. 
+
+The slider is always accessible, easy to use, and customizable to fit your needs.
