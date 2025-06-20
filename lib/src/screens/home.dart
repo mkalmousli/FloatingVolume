@@ -70,8 +70,8 @@ class HomeScreen extends StatelessWidget {
 
             ListTile(
               title: const Text("Version"),
-              trailing: Text("v1.0.0"),
-              subtitle: Text("19 Jun 2025"),
+              trailing: Text("v0.0.1"),
+              subtitle: Text("20 Jun 2025"),
             ),
             ListTile(
               title: const Text("Created by @mkalmousli"),
