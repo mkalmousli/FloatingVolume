@@ -13,6 +13,7 @@
     "pubspec.lock": true,
     ".flutter-plugins": true,
     ".flutter-plugins-dependencies": true,
+    ".fvm": true,
 
     "ios": true,
     "web": true,
