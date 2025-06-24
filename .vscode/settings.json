@@ -5,12 +5,14 @@
     "**/.hg": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
-    
+
     ".idea": true,
     ".dart_tool": true,
     ".metadata": true,
     "floating_volume.iml": true,
     "pubspec.lock": true,
+    ".flutter-plugins": true,
+    ".flutter-plugins-dependencies": true,
 
     "ios": true,
     "web": true,
