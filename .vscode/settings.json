@@ -1,22 +1,23 @@
 {
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/.DS_Store": true,
-        "**/Thumbs.db": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    
+    ".idea": true,
+    ".dart_tool": true,
+    ".metadata": true,
+    "floating_volume.iml": true,
+    "pubspec.lock": true,
 
-        ".idea": true,
-        ".dart_tool": true,
-        ".metadata": true,
-        "floating_volume.iml": true,
-        "pubspec.lock": true,
-        
-        "ios": true,
-        "web": true,
-        "build": true,
-        "macos": true,
-        "linux": true,
-        "windows": true
-    }
+    "ios": true,
+    "web": true,
+    "build": true,
+    "macos": true,
+    "linux": true,
+    "windows": true
+  },
+  "dart.flutterSdkPath": ".fvm/versions/3.29.1"
 }

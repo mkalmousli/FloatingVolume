@@ -56,3 +56,6 @@ web/
 # Pigeon generated files
 # lib/generated
 # android/app/src/main/kotlin/dev/flutter/floating_volume/
+
+# FVM Version Cache
+.fvm/
