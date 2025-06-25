@@ -11,6 +11,7 @@ import 'package:floating_volume/src/bloc/permissions/state.dart'
 import 'package:floating_volume/src/bloc/status/bloc.dart' as bstatus;
 import 'package:floating_volume/src/bloc/status/event.dart' as estatus;
 import 'package:floating_volume/src/bloc/status/state.dart' as sstatus;
+import 'package:device_info_plus/device_info_plus.dart';
 
 class FloatingVolumeApp extends StatelessWidget {
   const FloatingVolumeApp({super.key});
@@ -37,5 +38,6 @@ class _FloatingVolumeAppView extends StatelessWidget {
   const _FloatingVolumeAppView({super.key});
 
   @override
-  Widget build(BuildContext context) => MaterialApp(home: HomeScreen());
+  Widget build(BuildContext context) =>
+      MaterialApp(home: MaterialApp(home: HomeScreen()));
 }

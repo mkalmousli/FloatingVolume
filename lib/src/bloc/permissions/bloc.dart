@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart' as a;
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:floating_volume/generated/native_api.g.dart';
 import 'package:floating_volume/src/single.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -17,16 +18,48 @@ Stream<PermissionStatus> _createPermissionStream(
   }
 }
 
+Future<bool> shouldRequestPermissions() async {
+  final info = await DeviceInfoPlugin().androidInfo;
+  return info.version.sdkInt >= 23; // Only request on Android 6.0+
+}
+
 class Bloc extends a.Bloc<e.Event, s.State> {
+  bool? _shouldRequestPermissions;
+
   Bloc(super.initialState) {
     on<e.Event>((event, emit) async {
+      if (!(_shouldRequestPermissions ??= await shouldRequestPermissions())) {
+        emit(
+          state.copyWith(
+            operation: s.Operation.none,
+            overlayPermission: state.overlayPermission.copyWith(
+              isInitialized: true,
+              status: PermissionStatus.granted,
+            ),
+            notificationPermission: state.notificationPermission.copyWith(
+              isInitialized: true,
+              status: PermissionStatus.granted,
+            ),
+            batteryOptimizationPermission: state.batteryOptimizationPermission
+                .copyWith(
+                  isInitialized: true,
+                  status: PermissionStatus.granted,
+                ),
+          ),
+        );
+        return;
+      }
+
       switch (event) {
         case e.Event.initialize:
           emit(state.copyWith(operation: s.Operation.initializing));
-          final overlayPermission = await Permission.systemAlertWindow.status;
+
+          final PermissionStatus overlayPermission =
+              await Permission.systemAlertWindow.status;
           final notificationPermission = await Permission.notification.status;
           final batteryOptimizationPermission =
               await Permission.ignoreBatteryOptimizations.status;
+
           emit(
             state.copyWith(
               operation: s.Operation.none,

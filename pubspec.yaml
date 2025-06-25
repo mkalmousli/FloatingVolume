@@ -20,6 +20,8 @@ dependencies:
 
   volume_controller: ^3.4.0
 
+  device_info_plus: 
+
   flutter_svg: ^2.1.0
 
   gap:

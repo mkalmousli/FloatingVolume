@@ -78,7 +78,10 @@ class HomeScreen extends StatelessWidget {
               subtitle: const Text("https://mkalmousli.github.io"),
               trailing: SvgPicture.asset("images/mk.svg"),
               onTap: () async {
-                await launchUrlString("https://mkalmousli.github.io");
+                await launchUrlString(
+                  "https://mkalmousli.github.io",
+                  mode: LaunchMode.externalApplication,
+                );
               },
             ),
 
@@ -89,6 +92,7 @@ class HomeScreen extends StatelessWidget {
               onTap: () async {
                 await launchUrlString(
                   "https://github.com/mkalmousli/FloatingVolume/issues",
+                  mode: LaunchMode.externalApplication,
                 );
               },
             ),
@@ -99,6 +103,7 @@ class HomeScreen extends StatelessWidget {
               onTap: () async {
                 await launchUrlString(
                   "https://github.com/mkalmousli/FloatingVolume",
+                  mode: LaunchMode.externalApplication,
                 );
               },
             ),
@@ -144,7 +149,8 @@ class HomeScreen extends StatelessWidget {
               trailing: Icon(Icons.open_in_new),
               onTap: () async {
                 await launchUrlString(
-                  "https://opensource.org/licenses/GPL-3.0",
+                  "https://www.gnu.org/licenses/gpl-3.0.html",
+                  mode: LaunchMode.externalApplication,
                 );
               },
             ),
