@@ -27,14 +27,25 @@
 
 This app uses [Pigeon](https://pub.dev/packages/pigeon) to generate Dart and Kotlin code for Flutter → Android communication.
 
-Generate code with:
+1. Generate required code with:
 
 ```bash
 dart run pigeon --input pigeons/native_api.dart
 dart run pigeon --input pigeons/native_events.dart
 ```
 
-Then, you should be able to build it with flutter.
+
+2. Create `key.properties` in `android/app`, here is an example:
+
+```bash
+storePassword=your_password
+keyPassword=your_password
+keyAlias=key0
+storeFile=/path/to/your_keystore.jks
+```
+
+
+2. Then, you should be able to build it with flutter:
 
 ```bash
 flutter build apk --release
