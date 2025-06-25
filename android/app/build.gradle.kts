@@ -63,29 +63,3 @@ android {
 flutter {
     source = "../.."
 }
-
-
-// Mapping of ABI names to unique integer codes
-// These will be used to ensure each APK split by ABI has a unique versionCode
-val abiCodes = mapOf(
-    "armeabi-v7a" to 1,
-    "arm64-v8a" to 2,
-    "x86_64" to 3
-)
-
-// If no ABI filter is applied (e.g., for the fat APK that includes all ABIs, a fat APK),
-// the output will not receive a modified versionCode and will retain the base
-// flutter.versionCode (e.g., 100). Only ABI-specific APKs will have a unique
-// versionCode suffix (e.g., 1001, 1002, etc.).
-androidComponents {
-    onVariants { variant ->
-        variant.outputs.forEach { output ->
-            val abi = output.filters.find { it.filterType.name == "ABI" }?.identifier
-            val abiCode = abiCodes[abi]
-
-            output.versionCode.set(
-                (flutter.versionCode * 10) + (abiCode ?: 0)
-            )
-        }
-    }
-}
