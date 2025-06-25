@@ -35,7 +35,7 @@ dart run pigeon --input pigeons/native_events.dart
 ```
 
 
-2. Create `key.properties` in `android/app`, here is an example:
+2. Create `key.properties` in `android/`, here is an example:
 
 ```bash
 storePassword=your_password
