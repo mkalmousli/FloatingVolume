@@ -18,4 +18,4 @@ jobs:
       run: docker build . --file Dockerfile --tag a
 
     - name: Run build
-      run: sudo docker run --rm -v $(pwd):/app -it -t a /app/build.py --fdroid
+      run: sudo docker run --rm -v $(pwd):/app -t a /app/build.py --fdroid
