@@ -256,24 +256,36 @@ else:
     print(f"Flutter SDK ({FLUTTER_VERSION}) downloaded to {d_flutter}.")
 
 
+environ['PATH'] = f"{join(d_flutter, 'bin')}:{environ.get('PATH', '')}"
 
-check_call([
-    join(d_flutter, 'bin', 'flutter'), 'config', '--no-analytics'
-], env={
-    'PUB_CACHE': PUBCACHE_DIR,
-})
 
-check_call([
-    join(d_flutter, 'bin', 'flutter'), 'pub', 'get'
-], env={
-    'PUB_CACHE': PUBCACHE_DIR,
-})
+def run_flutter(cmd: List[str], env: dict = None):
+    """Run a Flutter command with the given environment."""
+    env = env or {}
+    env = environ.copy()
+    env['PUB_CACHE'] = PUBCACHE_DIR
+    env['ANDROID_HOME'] = ANDROID_HOME
+    check_call(
+        ["flutter"] + cmd,
+        env=env,
+        cwd=ROOT_DIR
+    )
 
-check_call([
-    join(d_flutter, 'bin', 'flutter'), 'build', 'apk', '--release', '--verbose',
-], env={
-    'PUB_CACHE': PUBCACHE_DIR,
-})
+run_flutter([
+    "config", "--no-analytics"
+])
+
+run_flutter([
+    'config', '--no-analytics'
+])
+
+run_flutter([
+    "pub", "get"
+])
+
+run_flutter([
+    "build", "apk", "--release", "--verbose",
+])
 
 f_apk = join(ROOT_DIR, "app.apk")
 if exists(f_apk):
