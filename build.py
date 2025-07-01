@@ -208,6 +208,9 @@ def extract(f_archive: str, d_dest: str):
 
 print("BUILD ENVIRONMENT:", BUILD_ENV.value)
 
+if BUILD_ENV == Environment.DOCKER:
+    print("INFO: Add SDKMAN to PATH")
+    environ['JAVA_HOME'] = "/root/.sdkman/candidates/java/current"
 
 
 if IS_FDROID:
