@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-from os import environ, listdir, makedirs, walk
+from os import environ, listdir, makedirs, remove, walk
 from os.path import abspath, dirname, join, exists, basename, getsize, isdir, isfile
 from argparse import ArgumentParser
 from os import makedirs
-from shutil import move, rmtree
+from shutil import copy, move, rmtree
 from typing import List
 from subprocess import check_call, Popen, PIPE
 from json import load
@@ -274,3 +274,14 @@ check_call([
 ], env={
     'PUB_CACHE': PUBCACHE_DIR,
 })
+
+f_apk = join(ROOT_DIR, "app.apk")
+if exists(f_apk):
+    print("Removing old APK:", f_apk)
+    remove(f_apk)
+
+copy(
+    join(ROOT_DIR, 'build', 'app', 'outputs', 'flutter-apk', 'app-release.apk'),
+    f_apk
+)
+print("APK built successfully:", f_apk)
