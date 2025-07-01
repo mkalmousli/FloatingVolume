@@ -8,13 +8,21 @@ from typing import List
 from subprocess import check_call, Popen, PIPE
 from json import load
 from urllib.request import Request, urlopen
+from enum import Enum
+
+
+class Environment(Enum):
+    FDROID = "fdroid"
+    DOCKER = "docker"
+
 
 p = ArgumentParser()
 p.add_argument('--fdroid', action='store_true', help='Build for F-Droid, on F-Droid server', default=False)
+p.add_argument('--env', '-e', choices=[e.value for e in Environment], help='The build environment', required=True)
 args = p.parse_args()
 
 IS_FDROID: bool = args.fdroid
-
+BUILD_ENV: Environment = Environment[args.env.upper()]
 
 THIS_FILE = abspath(__file__)
 THIS_DIR = dirname(THIS_FILE)
@@ -28,6 +36,8 @@ TOOLS_DIR = join(CACHE_DIR, 'Tools')
 TEMP_DIR = join(CACHE_DIR, 'Temp')
 
 PUBCACHE_DIR = join(CACHE_DIR, 'PubCache')
+
+
 
 with open(join(ROOT_DIR, '.fvmrc'), 'r') as f:
     fvmrc = load(f)
@@ -196,6 +206,7 @@ def extract(f_archive: str, d_dest: str):
 
 
 
+print("BUILD ENVIRONMENT:", BUILD_ENV.value)
 
 
 
