@@ -256,10 +256,10 @@ if BUILD_ENV == Environment.DOCKER:
 
 
 
-
+ANDROID_HOME = "/opt/android-sdk"
+environ['ANDROID_HOME'] = ANDROID_HOME
 
 if BUILD_ENV == Environment.FDROID:
-    ANDROID_HOME = "/opt/android-sdk"
 
     if exists(ANDROID_HOME):
         print("Using F-Droid's Android SDK at:", ANDROID_HOME)
@@ -267,9 +267,9 @@ if BUILD_ENV == Environment.FDROID:
         raise FileNotFoundError("F-Droid server requires Android SDK to be at /opt/android-sdk.")
 
 else:
-    ANDROID_HOME = join(TOOLS_DIR, 'AndroidSDK')
-
-    if not exists(ANDROID_HOME):
+    if exists(ANDROID_HOME):
+        print("Android SDK already exists at:", ANDROID_HOME)
+    else:
         f_archive = download("https://dl.google.com/android/repository/commandlinetools-linux-6858069_latest.zip")
         d_cmdtools = join(TOOLS_DIR, 'CommandLineTools')
         extract(f_archive, d_cmdtools)
@@ -292,13 +292,7 @@ else:
         ])
 
         print("Android SDK installed successfully.")
-    
-    else:
-        print("Android SDK already exists at:", ANDROID_HOME)
 
-
-environ['ANDROID_HOME'] = ANDROID_HOME
-print(f"ANDROID_HOME: {ANDROID_HOME}")
 
 
 
