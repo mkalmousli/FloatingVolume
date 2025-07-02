@@ -210,7 +210,7 @@ def extract(f_archive: str, d_dest: str):
 """
 This path is fix, to make sure the build is reproducible.
 """
-REPRODUCIBLE_ROOT_DIR = "/app"  # Reproducible root directory
+REPRODUCIBLE_ROOT_DIR = "/tmp/app"  # Reproducible root directory
 
 
 
