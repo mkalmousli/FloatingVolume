@@ -58,6 +58,16 @@ android {
         }
     }
     
+
+    // disable DependencyInfoBlock, for F-Droid.
+    //See: https://gitlab.com/fdroid/admin/-/issues/367
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs.
+        includeInApk = false
+        // Disables dependency metadata when building Android App Bundles.
+        includeInBundle = false
+    }
+    
     ndkVersion = "27.0.12077973"
 }
 
