@@ -233,7 +233,7 @@ if ROOT_DIR == REPRODUCIBLE_ROOT_DIR:
 else:
     BUILD_ENV = Environment.FDROID
 
-print(f"BUILD_ENV: {BUILD_ENV.value}")
+print(f"BUILD ENVIRONMENT: {BUILD_ENV.value}")
 
 
 if BUILD_ENV == Environment.FDROID:
@@ -246,8 +246,6 @@ if BUILD_ENV == Environment.FDROID:
     )
 
 
-
-print("BUILD ENVIRONMENT:", BUILD_ENV.value)
 
 if BUILD_ENV == Environment.DOCKER:
     d_java_home = "/usr/lib/jvm/java-17-openjdk-amd64"
