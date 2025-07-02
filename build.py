@@ -334,7 +334,7 @@ def run_flutter(cmd: List[str], env: dict = None):
     check_call(
         ["flutter"] + cmd,
         env=env,
-        cwd=ROOT_DIR
+        cwd=REPRODUCIBLE_ROOT_DIR
     )
 
 run_flutter([
