@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
+"""
+This script is meant to make building APK reproducible on different environments.
+Mainly, to produce the same APK on F-Droid server and on local machine using Docker.
+"""
 from os import environ, listdir, makedirs, remove, walk
 from os.path import abspath, dirname, join, exists, basename, getsize, isdir, isfile
 from argparse import ArgumentParser
 from os import makedirs
-from shutil import copy, move, rmtree
+from shutil import copy, copytree, move, rmtree
 from typing import List
 from subprocess import check_call, Popen, PIPE
 from json import load
@@ -16,32 +20,27 @@ class Environment(Enum):
     DOCKER = "docker"
 
 
-p = ArgumentParser()
-p.add_argument('--fdroid', action='store_true', help='Build for F-Droid, on F-Droid server', default=False)
-p.add_argument('--env', '-e', choices=[e.value for e in Environment], help='The build environment', required=True)
-args = p.parse_args()
 
-IS_FDROID: bool = args.fdroid
-BUILD_ENV: Environment = Environment[args.env.upper()]
 
 THIS_FILE = abspath(__file__)
 THIS_DIR = dirname(THIS_FILE)
 ROOT_DIR = THIS_DIR
 
-CACHE_DIR = join(ROOT_DIR, '.CACHE')
-DOWNLOADS_DIR = join(CACHE_DIR, 'Downloads')
-FULL_DOWNLOADS_DIR = join(DOWNLOADS_DIR, 'Full')
-PART_DOWNLOADS_DIR = join(DOWNLOADS_DIR, 'Part')
-TOOLS_DIR = join(CACHE_DIR, 'Tools')
-TEMP_DIR = join(CACHE_DIR, 'Temp')
-
-PUBCACHE_DIR = join(CACHE_DIR, 'PubCache')
+print(f"THIS_FILE: {THIS_FILE}")
+print(f"THIS_DIR: {THIS_DIR}")
+print(f"ROOT_DIR: {ROOT_DIR}")
 
 
 
 with open(join(ROOT_DIR, '.fvmrc'), 'r') as f:
     fvmrc = load(f)
     FLUTTER_VERSION = fvmrc.get('flutter')
+
+print(f"FLUTTER_VERSION: {FLUTTER_VERSION}")
+
+
+
+
 
 def mk(dir: str):
     makedirs(dir, exist_ok=True)
@@ -206,14 +205,60 @@ def extract(f_archive: str, d_dest: str):
 
 
 
+
+
+"""
+This path is fix, to make sure the build is reproducible.
+"""
+REPRODUCIBLE_ROOT_DIR = "/app"  # Reproducible root directory
+
+
+
+
+CACHE_DIR = join(REPRODUCIBLE_ROOT_DIR, '.CACHE')
+DOWNLOADS_DIR = join(CACHE_DIR, 'Downloads')
+FULL_DOWNLOADS_DIR = join(DOWNLOADS_DIR, 'Full')
+PART_DOWNLOADS_DIR = join(DOWNLOADS_DIR, 'Part')
+TOOLS_DIR = join(CACHE_DIR, 'Tools')
+TEMP_DIR = join(CACHE_DIR, 'Temp')
+PUBCACHE_DIR = join(CACHE_DIR, 'PubCache')
+
+
+
+"""
+Determine the build environment based on the directory.
+"""
+if ROOT_DIR == REPRODUCIBLE_ROOT_DIR:
+    BUILD_ENV = Environment.DOCKER
+else:
+    BUILD_ENV = Environment.FDROID
+
+print(f"BUILD_ENV: {BUILD_ENV.value}")
+
+
+if BUILD_ENV == Environment.FDROID:
+    mkp(REPRODUCIBLE_ROOT_DIR)
+    
+    mkp(REPRODUCIBLE_ROOT_DIR)
+    copytree(
+        ROOT_DIR,
+        REPRODUCIBLE_ROOT_DIR
+    )
+
+
+
 print("BUILD ENVIRONMENT:", BUILD_ENV.value)
 
 if BUILD_ENV == Environment.DOCKER:
-    print("INFO: Add SDKMAN to PATH")
-    environ['JAVA_HOME'] = "/root/.sdkman/candidates/java/current"
+    d_java_home = "/usr/lib/jvm/java-17-openjdk-amd64"
+    print(f"JAVA_HOME: {d_java_home}")
+    environ['JAVA_HOME'] = d_java_home
 
 
-if IS_FDROID:
+
+
+
+if BUILD_ENV == Environment.FDROID:
     ANDROID_HOME = "/opt/android-sdk"
 
     if exists(ANDROID_HOME):
@@ -252,6 +297,12 @@ else:
         print("Android SDK already exists at:", ANDROID_HOME)
 
 
+environ['ANDROID_HOME'] = ANDROID_HOME
+print(f"ANDROID_HOME: {ANDROID_HOME}")
+
+
+
+
 
 
 d_flutter = join(TOOLS_DIR, 'Flutter')
@@ -271,14 +322,15 @@ else:
 
 
 environ['PATH'] = f"{join(d_flutter, 'bin')}:{environ.get('PATH', '')}"
+environ['PUB_CACHE'] = PUBCACHE_DIR
+
+print(f"FLUTTER SDK PATH: {join(d_flutter, 'bin')}")
+print(f"PUB_CACHE: {PUBCACHE_DIR}")
 
 
 def run_flutter(cmd: List[str], env: dict = None):
     """Run a Flutter command with the given environment."""
-    env = env or {}
     env = environ.copy()
-    env['PUB_CACHE'] = PUBCACHE_DIR
-    env['ANDROID_HOME'] = ANDROID_HOME
     check_call(
         ["flutter"] + cmd,
         env=env,
@@ -307,7 +359,7 @@ if exists(f_apk):
     remove(f_apk)
 
 copy(
-    join(ROOT_DIR, 'build', 'app', 'outputs', 'flutter-apk', 'app-release.apk'),
+    join(REPRODUCIBLE_ROOT_DIR, 'build', 'app', 'outputs', 'flutter-apk', 'app-release.apk'),
     f_apk
 )
 print("APK built successfully:", f_apk)
