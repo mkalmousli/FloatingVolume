@@ -17,5 +17,18 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag a
 
+    - name: Configure 1
+      run: echo "{{ secrets.KEY_BASE64 }}" | base64 -d > github.jks
+
+    - name: Configure 2
+      run: echo "{{ secrets.KEY_PROPERTIES_BASE64 }}" | base64 -d > android/key.properties
+
     - name: Run build
       run: sudo docker run --rm -v $(pwd):/tmp/app -t a /tmp/app/build.py
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: FloatingVolume.actions.apk
+        path: app.apk
+
