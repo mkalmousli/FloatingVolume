@@ -18,10 +18,10 @@ jobs:
       run: docker build . --file Dockerfile --tag a
 
     - name: Configure 1
-      run: echo "{{ secrets.KEY_BASE64 }}" | base64 -d > github.jks
+      run: echo "${{ secrets.KEY_BASE64 }}" | base64 -d > github.jks
 
     - name: Configure 2
-      run: echo "{{ secrets.KEY_PROPERTIES_BASE64 }}" | base64 -d > android/key.properties
+      run: echo "${{ secrets.KEY_PROPERTIES_BASE64 }}" | base64 -d > android/key.properties
 
     - name: Run build
       run: sudo docker run --rm -v $(pwd):/tmp/app -t a /tmp/app/build.py
