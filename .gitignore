@@ -61,3 +61,4 @@ web/
 .fvm/
 
 .CACHE
+app.apk

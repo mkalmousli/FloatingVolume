@@ -248,7 +248,27 @@ if BUILD_ENV == Environment.FDROID:
 
 
 if BUILD_ENV == Environment.DOCKER:
-    d_java_home = "/usr/lib/jvm/java-17-openjdk-amd64"
+    
+    print("Searching for JAVA_HOME in /usr/lib/jvm...")
+
+    d_java_home = None
+    for entity in listdir("/usr/lib/jvm"):
+        if entity.startswith("java-") and isdir(join("/usr/lib/jvm", entity)):
+            d_java_home = join("/usr/lib/jvm", entity)
+            break
+
+    if d_java_home:
+        print(f"Found JAVA_HOME: {d_java_home}")
+    else:
+        print("No JAVA_HOME found in /usr/lib/jvm, using default Java 17 OpenJDK.")
+        raise FileNotFoundError(
+            "No Java installation found in /usr/lib/jvm. "
+        )
+        
+        # Default Java 17 OpenJDK path
+        #d_java_home = "/usr/lib/jvm/java-17-openjdk-amd64"
+    
+
     print(f"JAVA_HOME: {d_java_home}")
     environ['JAVA_HOME'] = d_java_home
 
