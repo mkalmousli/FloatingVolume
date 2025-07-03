@@ -51,6 +51,30 @@ storeFile=/path/to/your_keystore.jks
 flutter build apk --release
 ```
 
+The output will be in `build/app/outputs/flutter-apk/app-release.apk`.
+
+This is not considered a reproducible build, as it depends on the environment, such as the OS, the version of the JDK, the location of the source code, and so on.
+
+Look below if you want to build it in a reproducible way.
+
+
+### Reproducible Build
+
+This app is meant to be a Reproducible build for F-Droid.
+
+The building environment does play a crucial role in the build process, for example which OS, where the source code is located, or the version of the JDK used.
+
+To make this easier, for me to build, I have created a simple script that tries to mimic the F-Droid build environment as closely as possible.
+
+```bash
+docker build -t floating_volume .
+docker run --rm -v $(pwd):/tmp/app floating_volume /tmp/app/build.py
+```
+
+This will result in `app.apk` in the current directory, which is a reproducible build of Floating Volume.
+
+
+
 ## License
 [![GNU GPLv3 Image](https://www.gnu.org/graphics/gplv3-127x51.png)](https://www.gnu.org/licenses/gpl-3.0.en.html)  
 
