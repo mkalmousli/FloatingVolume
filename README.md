@@ -1,3 +1,5 @@
+<a href="https://f-droid.org/en/packages/com.github.mkalmousli.floating_volume"><img src="https://img.shields.io/f-droid/v/com.github.mkalmousli.floating_volume?label=F-Droid" alt="Current F-Droid version"/></a> <a href="https://github.com/mkalmousli/FloatingVolume/releases/latest"><img src="https://img.shields.io/github/v/tag/mkalmousli/FloatingVolume?label=GitHub" alt="Current GitHub version"/></a>
+
 <p align="center">
     <img src="logo.svg" width="200px" />
 </p>
@@ -5,6 +7,21 @@
 <p align="center">
     Control your device’s volume anywhere with a floating slider on Android.
 </p>
+
+
+## Get it
+
+F-Droid is the official and recommend way to get Floating Volume:
+
+<a href="https://f-droid.org/en/packages/com.github.mkalmousli.floating_volume">
+    <img src="https://f-droid.org/badge/get-it-on.svg" width="250px" />
+</a>
+
+F-Droid takes a while to publish new versions, if you want to get latest version, you can get it from GitHub releases:
+
+<a href="https://github.com/mkalmousli/FloatingVolume/releases/latest">
+    <img src="get_it_on_github.png" width="200px"/>
+</a>
 
 
 ## Screenshots
