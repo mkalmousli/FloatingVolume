@@ -61,6 +61,8 @@ keyAlias=key0
 storeFile=/path/to/your_keystore.jks
 ```
 
+> [!NOTE]  
+> Make sure to build the app while having `.git`, also not a from shallow clone or from a tarball.
 
 2. Then, you should be able to build it with flutter:
 

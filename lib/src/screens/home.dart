@@ -134,7 +134,7 @@ class HomeScreen extends StatelessWidget {
             ListTile(
               title: const Text("Like this app?"),
               subtitle: const Text(
-                "If you want to me to work on this more, you can buy me a coffee.",
+                "If you want me to work on this more, you can buy me a coffee ;)",
               ),
               trailing: Icon(Icons.tag_faces),
               onTap: () async {
