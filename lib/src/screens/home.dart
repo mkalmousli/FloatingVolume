@@ -19,6 +19,10 @@ import 'package:floating_volume/src/bloc/permissions/event.dart'
 import 'package:floating_volume/src/bloc/permissions/state.dart'
     as spermissions;
 
+import 'package:floating_volume/src/bloc/theme/bloc.dart' as btheme;
+import 'package:floating_volume/src/bloc/theme/state.dart' as stheme;
+import 'package:floating_volume/src/bloc/theme/event.dart' as etheme;
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -66,27 +70,58 @@ class HomeScreen extends StatelessWidget {
               },
             ),
 
-            Gap(40),
+            Gap(20),
+
+            BlocBuilder<btheme.Bloc, stheme.State>(
+              builder: (context, state) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ...stheme.Theme.values.map((t) {
+                        final isSelected = state.theme == t;
+
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton.icon(
+                            icon: isSelected ? Icon(Icons.check) : null,
+                            onPressed:
+                                state.theme == t
+                                    ? null
+                                    : () => context.read<btheme.Bloc>().add(
+                                      etheme.Change(t),
+                                    ),
+                            label: Text(t.name),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                );
+              },
+            ),
 
             ListTile(
               title: const Text("Version"),
-              trailing: Text("v0.0.1"),
-              subtitle: Text("20 Jun 2025"),
+              trailing: Text("v1.0.0"),
+              subtitle: Text("03 Oct 2025"),
             ),
             ListTile(
               title: const Text("Created by @mkalmousli"),
-              subtitle: const Text("https://mkalmousli.github.io"),
+              subtitle: const Text("https://mkalmousli.dev"),
               trailing: SvgPicture.asset("images/mk.svg"),
               onTap: () async {
                 await launchUrlString(
-                  "https://mkalmousli.github.io",
+                  "https://mkalmousli.dev",
                   mode: LaunchMode.externalApplication,
                 );
               },
             ),
 
             ListTile(
-              title: const Text("Report an Issue"),
+              title: const Text("Having an issue?"),
               subtitle: const Text("Report an issue on GitHub."),
               trailing: Icon(Icons.bug_report),
               onTap: () async {
@@ -97,16 +132,19 @@ class HomeScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              title: const Text("Source Code"),
-              subtitle: const Text("View the source code on GitHub."),
-              trailing: Icon(Icons.open_in_new),
+              title: const Text("Like this app?"),
+              subtitle: const Text(
+                "If you want to me to work on this more, you can buy me a coffee.",
+              ),
+              trailing: Icon(Icons.tag_faces),
               onTap: () async {
                 await launchUrlString(
-                  "https://github.com/mkalmousli/FloatingVolume",
+                  "https://www.ko-fi.com/mkalmousli",
                   mode: LaunchMode.externalApplication,
                 );
               },
             ),
+
             BlocBuilder<bpermissions.Bloc, spermissions.State>(
               builder: (context, state) {
                 final Widget trailing;
@@ -150,6 +188,17 @@ class HomeScreen extends StatelessWidget {
               onTap: () async {
                 await launchUrlString(
                   "https://www.gnu.org/licenses/gpl-3.0.html",
+                  mode: LaunchMode.externalApplication,
+                );
+              },
+            ),
+            ListTile(
+              title: const Text("Source Code"),
+              subtitle: const Text("View the source code on GitHub."),
+              trailing: Icon(Icons.open_in_new),
+              onTap: () async {
+                await launchUrlString(
+                  "https://github.com/mkalmousli/FloatingVolume",
                   mode: LaunchMode.externalApplication,
                 );
               },

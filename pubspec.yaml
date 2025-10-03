@@ -30,6 +30,9 @@ dependencies:
 
   url_launcher: 
 
+  shared_preferences:
+  rx_shared_preferences: ^4.0.0
+
 
 dev_dependencies:
   pigeon:
