@@ -15,20 +15,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-      name: Retrieve key.properties
+    - name: Clone repo
+      uses: actions/checkout@v4
+      
+    - name: Retrieve key.properties
       env:
         KEY_PROPS: ${{ secrets.KEY_PROPS }}
-    
-    - name: Write key.properties
       run: |
         echo $KEY_PROPS > android/key.properties
 
-    - name: Retrieve signatur
+    - name: Retrieve signature
       env:
         SIGNATUR_BASE64: ${{ secrets.SIGNATUR_BASE64 }}
       run: |
-        echo $SIGNATUR_BASE64 > github.jks
+        echo $SIGNATUR_BASE64 | base64 --decode > github.jks
 
 
     - name: Build docker container
