@@ -1,0 +1,46 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Retrieve key.properties
+      env:
+        KEY_PROPS: ${{ secrets.KEY_PROPS }}
+    - name: Write key.properties
+      run: |
+        echo $KEY_PROPS > android/key.properties
+
+    - name: Retrieve signatur
+      env:
+        SIGNATUR_BASE64: ${{ secrets.SIGNATUR_BASE64 }}
+    - name: Write signature
+      run: |
+        echo $SIGNATUR_BASE64 > github.jks
+
+
+    - name: Build docker container
+      run: |
+        docker build -t floating_volume .
+
+    - name: Build the APK
+      run: |
+        docker run --rm -v $(pwd):/tmp/app floating_volume /tmp/app/build.py
+
+    - name: Upload APK as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: FloatingVolume.apk
+        path: app.apk
