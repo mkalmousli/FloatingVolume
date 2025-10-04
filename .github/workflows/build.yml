@@ -16,9 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Retrieve key.properties
+      name: Retrieve key.properties
       env:
         KEY_PROPS: ${{ secrets.KEY_PROPS }}
+    
     - name: Write key.properties
       run: |
         echo $KEY_PROPS > android/key.properties
