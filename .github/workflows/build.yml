@@ -20,9 +20,9 @@ jobs:
       
     - name: Retrieve key.properties
       env:
-        KEY_PROPS: ${{ secrets.KEY_PROPS }}
+        KEY_PROPS_BASE64: ${{ secrets.KEY_PROPS_BASE64 }}
       run: |
-        echo $KEY_PROPS > android/key.properties
+        echo $KEY_PROPS_BASE64 > android/key.properties
 
     - name: Retrieve signature
       env:
