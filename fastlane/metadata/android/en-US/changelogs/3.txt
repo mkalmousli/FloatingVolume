@@ -1,0 +1,9 @@
+New Features:
+
+- Dark mode!
+
+You can now switch between dark, light or system.
+
+
+The previous version (v0.0.2) is missed by F-Droid as there was an issue,
+so I downgraded AGP to 8.11.1 as F-Droid needed it (see issue #2)
