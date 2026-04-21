@@ -53,6 +53,18 @@ abstract class NativeApi {
   void setMinVolume(int minVolume);
 
   ///
+  /// Returns the saved slider size in density-independent pixels.
+  ///
+  @async
+  int getSliderSize();
+
+  ///
+  /// Updates the slider size in density-independent pixels.
+  ///
+  @async
+  void setSliderSize(int sliderSize);
+
+  ///
   /// Show a toast
   ///
   @async

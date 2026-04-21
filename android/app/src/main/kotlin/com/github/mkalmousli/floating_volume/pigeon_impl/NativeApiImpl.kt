@@ -5,6 +5,7 @@ import ToastDuration
 import android.content.Context
 import android.widget.Toast
 import com.github.mkalmousli.floating_volume.bloc.ServiceStatusBloc
+import com.github.mkalmousli.floating_volume.bloc.SliderSizeBloc
 import com.github.mkalmousli.floating_volume.bloc.VisibilityBloc
 import com.github.mkalmousli.floating_volume.inIO
 import com.github.mkalmousli.floating_volume.inMain
@@ -67,6 +68,21 @@ class NativeApiImpl(
 
     override fun setMinVolume(minVolume: Long, callback: (Result<Unit>) -> Unit) {
 //        TODO("Not yet implemented")
+    }
+
+    override fun getSliderSize(callback: (Result<Long>) -> Unit) {
+        scope.inMain {
+            callback(Result.success(SliderSizeBloc.state.value.toLong()))
+        }
+    }
+
+    override fun setSliderSize(sliderSize: Long, callback: (Result<Unit>) -> Unit) {
+        scope.inIO {
+            SliderSizeBloc.set(context, sliderSize.toInt())
+            inMain {
+                callback(Result.success(Unit))
+            }
+        }
     }
 
     override fun showToast(

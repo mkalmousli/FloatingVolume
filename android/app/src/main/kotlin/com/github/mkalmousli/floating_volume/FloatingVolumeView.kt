@@ -1,14 +1,13 @@
 package com.github.mkalmousli.floating_volume
 
 import android.content.Context
-import android.graphics.Color
-import android.util.Log
 import android.view.Gravity
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.SeekBar
 import androidx.core.view.marginTop
 import androidx.core.view.updateMargins
+import androidx.core.view.updateLayoutParams
+import com.github.mkalmousli.floating_volume.bloc.SliderSizeBloc
 import com.github.mkalmousli.floating_volume.bloc.SystemVolumeBloc
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,8 +37,8 @@ class FloatingVolumeView(
             )
 
             layoutParams = LayoutParams(
-                50,
-                300
+                context.dp(Const.DEFAULT_SLIDER_SIZE_DP),
+                context.dp(320)
             )
             orientation.value = CoolSlider.Orientation.Vertical
 
@@ -78,17 +77,33 @@ class FloatingVolumeView(
             alpha = 0.5f
 
             val size = min(
-                50,
-                50
+                context.dp(Const.DEFAULT_SLIDER_SIZE_DP),
+                context.dp(56)
             )
             layoutParams = LayoutParams(
                 size,
                 size
             ).apply {
                 updateMargins(
-                    top = 10
+                    top = context.dp(12)
                 )
             }
+        }
+    }
+
+    private fun applySliderSize(sizeDp: Int) {
+        val width = context.dp(sizeDp)
+        val handleSize = maxOf(width, context.dp(56))
+
+        slider.updateLayoutParams<LayoutParams> {
+            this.width = width
+            height = context.dp(320)
+        }
+
+        handleIv.updateLayoutParams<LayoutParams> {
+            this.width = handleSize
+            height = handleSize
+            updateMargins(top = context.dp(12))
         }
     }
 
@@ -97,5 +112,13 @@ class FloatingVolumeView(
         gravity = Gravity.CENTER
         addView(slider)
         addView(handleIv)
+
+        scope.inIO {
+            SliderSizeBloc.state.collectLatest { sizeDp ->
+                inMain {
+                    applySliderSize(sizeDp)
+                }
+            }
+        }
     }
 }

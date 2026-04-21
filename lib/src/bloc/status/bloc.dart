@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart' as a;
-import 'package:floating_volume/generated/native_api.g.dart';
 import 'package:floating_volume/generated/native_events.g.dart';
 import 'package:floating_volume/src/single.dart';
 

@@ -124,6 +124,18 @@ interface NativeApi {
   fun setMinVolume(minVolume: Long, callback: (Result<Unit>) -> Unit)
   /**
    *
+   * Returns the saved slider size in density-independent pixels.
+   *
+   */
+  fun getSliderSize(callback: (Result<Long>) -> Unit)
+  /**
+   *
+   * Updates the slider size in density-independent pixels.
+   *
+   */
+  fun setSliderSize(sliderSize: Long, callback: (Result<Unit>) -> Unit)
+  /**
+   *
    * Show a toast
    *
    */
@@ -232,6 +244,43 @@ interface NativeApi {
             val args = message as List<Any?>
             val minVolumeArg = args[0] as Long
             api.setMinVolume(minVolumeArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NativeApiPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(NativeApiPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.getSliderSize$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.getSliderSize{ result: Result<Long> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NativeApiPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(NativeApiPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.setSliderSize$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val sliderSizeArg = args[0] as Long
+            api.setSliderSize(sliderSizeArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(NativeApiPigeonUtils.wrapError(error))

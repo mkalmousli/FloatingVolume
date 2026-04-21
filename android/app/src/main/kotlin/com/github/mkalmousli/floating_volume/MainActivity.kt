@@ -9,6 +9,7 @@ import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import com.github.mkalmousli.floating_volume.bloc.PositionBloc
 import com.github.mkalmousli.floating_volume.bloc.ServiceStatusBloc
+import com.github.mkalmousli.floating_volume.bloc.SliderSizeBloc
 import com.github.mkalmousli.floating_volume.bloc.SystemOrientationBloc
 import com.github.mkalmousli.floating_volume.bloc.SystemVolumeBloc
 import com.github.mkalmousli.floating_volume.bloc.SystemVolumeInPercentageBloc
@@ -94,6 +95,9 @@ class MainActivity : FlutterActivity() {
                 PositionBloc.initialize(c)
             }
             inIO {
+                SliderSizeBloc.initialize(c)
+            }
+            inIO {
                 PositionBloc.handleOrientationChanges(c)
             }
             inIO {
@@ -155,4 +159,3 @@ class MainActivity : FlutterActivity() {
         }
     }
 }
-

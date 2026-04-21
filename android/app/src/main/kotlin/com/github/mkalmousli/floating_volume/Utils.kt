@@ -2,10 +2,12 @@ package com.github.mkalmousli.floating_volume
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.TypedValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 
 
@@ -18,6 +20,13 @@ fun SharedPreferences.setInt(name: String, value: Int) =
 
 fun SharedPreferences.setBoolean(name: String, value: Boolean) =
     edit().putBoolean(name, value).apply()
+
+fun Context.dp(value: Int): Int =
+    TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        value.toFloat(),
+        resources.displayMetrics
+    ).roundToInt()
 
 
 

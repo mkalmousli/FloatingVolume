@@ -1,0 +1,8 @@
+New Features:
+
+- Added a slider size setting with live overlay updates.
+- Refreshed the home and permissions screens with a modern Material 3 UI.
+
+Fixes:
+
+- Fixed the overlay slider being too small on dense screens by using density-independent sizing.
