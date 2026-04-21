@@ -1,4 +1,5 @@
 import 'package:floating_volume/src/app_info.dart';
+import 'package:floating_volume/src/bloc/max_volume/cubit.dart';
 import 'package:floating_volume/src/bloc/slider_size/cubit.dart';
 import 'package:floating_volume/src/ext.dart';
 import 'package:floating_volume/src/single.dart';
@@ -31,16 +32,18 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
           children: const [
             _HeroCard(),
-            Gap(16),
+            Gap(12),
             _ServiceCard(),
-            Gap(16),
+            Gap(12),
             _AppearanceCard(),
-            Gap(16),
+            Gap(12),
+            _MaxVolumeCard(),
+            Gap(12),
             _PermissionsCard(),
-            Gap(16),
+            Gap(12),
             _LinksCard(),
           ],
         ),
@@ -58,65 +61,44 @@ class _HeroCard extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(24),
         gradient: LinearGradient(
           colors: [colorScheme.primaryContainer, colorScheme.tertiaryContainer],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              Container(
-                width: 72,
-                height: 72,
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: colorScheme.surface.withValues(alpha: 0.72),
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: SvgPicture.asset("images/logo.svg"),
-              ),
-              const Gap(16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Floating Volume",
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const Gap(6),
-                    Text(
-                      "A persistent system volume slider that stays one swipe away.",
-                      style: theme.textTheme.bodyLarge,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          Container(
+            width: 56,
+            height: 56,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: colorScheme.surface.withValues(alpha: 0.72),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: SvgPicture.asset("images/logo.svg"),
           ),
-          const Gap(20),
-          const Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              Chip(
-                avatar: Icon(Icons.tune, size: 18),
-                label: Text("Resizable slider"),
-              ),
-              Chip(
-                avatar: Icon(Icons.palette_outlined, size: 18),
-                label: Text("Material 3 refresh"),
-              ),
-            ],
+          const Gap(16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Floating Volume",
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  "A persistent system volume slider.",
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -131,83 +113,61 @@ class _ServiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: BlocBuilder<bstatus.Bloc, sstatus.State>(
-          builder: (context, state) {
-            final isBusy = state.operation != sstatus.Operation.none;
-            final isEnabled = state.isEnabled;
+    return BlocBuilder<bstatus.Bloc, sstatus.State>(
+      builder: (context, state) {
+        final isBusy = state.operation != sstatus.Operation.none;
+        final isEnabled = state.isEnabled;
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Overlay",
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
+        return Card(
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: isBusy
+                ? null
+                : () async {
+                    final isGranted =
+                        context.read<bpermissions.Bloc>().state.isGranted;
+
+                    if (!isGranted) {
+                      await nativeApi.showToast("Grant permissions first.");
+                      if (context.mounted) {
+                        await context.push((_) => const PermissionsScreen());
+                      }
+                      return;
+                    }
+
+                    context.read<bstatus.Bloc>().add(estatus.Event.toggle);
+                  },
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Service Overlay",
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          isEnabled ? "Running" : "Stopped",
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const Gap(8),
-                Text(
-                  isEnabled
-                      ? "The floating slider is running and ready."
-                      : "Start the service to keep volume control on screen.",
-                  style: theme.textTheme.bodyMedium,
-                ),
-                const Gap(20),
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: isBusy
-                          ? null
-                          : () async {
-                              final isGranted = context
-                                  .read<bpermissions.Bloc>()
-                                  .state
-                                  .isGranted;
-
-                              if (!isGranted) {
-                                await nativeApi.showToast(
-                                  "Please grant permissions first.",
-                                );
-
-                                if (context.mounted) {
-                                  await context.push(
-                                    (_) => const PermissionsScreen(),
-                                  );
-                                }
-                                return;
-                              }
-
-                              context.read<bstatus.Bloc>().add(
-                                estatus.Event.toggle,
-                              );
-                            },
-                      child: Opacity(
-                        opacity: isBusy ? 0.6 : 1,
-                        child: CoolSwitch(value: isEnabled, width: 104),
-                      ),
-                    ),
-                    const Gap(16),
-                    Expanded(
-                      child: FilledButton.tonalIcon(
-                        onPressed: isBusy
-                            ? null
-                            : () {
-                                context.push((_) => const PermissionsScreen());
-                              },
-                        icon: const Icon(Icons.shield_outlined),
-                        label: const Text("Permissions"),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          },
-        ),
-      ),
+                  Opacity(
+                    opacity: isBusy ? 0.6 : 1,
+                    child: CoolSwitch(value: isEnabled, width: 80),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -221,87 +181,106 @@ class _AppearanceCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "Appearance",
-              style: theme.textTheme.titleLarge?.copyWith(
+              style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const Gap(18),
+            const Gap(12),
             BlocBuilder<btheme.Bloc, stheme.State>(
               builder: (context, state) {
-                return SegmentedButton<stheme.Theme>(
-                  segments: const [
-                    ButtonSegment(
-                      value: stheme.Theme.system,
-                      icon: Icon(Icons.brightness_auto_outlined),
-                      label: Text("System"),
+                return Column(
+                  children: [
+                    SegmentedButton<stheme.Theme>(
+                      segments: const [
+                        ButtonSegment(
+                          value: stheme.Theme.system,
+                          icon: Icon(Icons.brightness_auto_outlined, size: 20),
+                          label: Text("Auto"),
+                        ),
+                        ButtonSegment(
+                          value: stheme.Theme.light,
+                          icon: Icon(Icons.light_mode_outlined, size: 20),
+                          label: Text("Light"),
+                        ),
+                        ButtonSegment(
+                          value: stheme.Theme.dark,
+                          icon: Icon(Icons.dark_mode_outlined, size: 20),
+                          label: Text("Dark"),
+                        ),
+                      ],
+                      selected: {state.theme},
+                      onSelectionChanged: (selection) {
+                        final selectedTheme = selection.first;
+                        if (selectedTheme != state.theme) {
+                          context.read<btheme.Bloc>().add(
+                            etheme.Change(selectedTheme),
+                          );
+                        }
+                      },
                     ),
-                    ButtonSegment(
-                      value: stheme.Theme.light,
-                      icon: Icon(Icons.light_mode_outlined),
-                      label: Text("Light"),
-                    ),
-                    ButtonSegment(
-                      value: stheme.Theme.dark,
-                      icon: Icon(Icons.dark_mode_outlined),
-                      label: Text("Dark"),
+                    const Gap(8),
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text("Use Material 3"),
+                      value: state.useMaterial3,
+                      onChanged: (value) {
+                        context.read<btheme.Bloc>().add(
+                          etheme.ToggleMaterial3(value),
+                        );
+                      },
                     ),
                   ],
-                  selected: {state.theme},
-                  onSelectionChanged: (selection) {
-                    final selectedTheme = selection.first;
-                    if (selectedTheme != state.theme) {
-                      context.read<btheme.Bloc>().add(
-                        etheme.Change(selectedTheme),
-                      );
-                    }
-                  },
                 );
               },
             ),
-            const Gap(20),
+            const Divider(),
             BlocBuilder<SliderSizeCubit, SliderSizeState>(
               builder: (context, state) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          "Slider size",
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const Spacer(),
-                        Text("${state.size} dp"),
-                      ],
+                    SwitchListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text("Custom Size (%)"),
+                      value: state.isCustomSizeEnabled,
+                      onChanged: (value) {
+                        context.read<SliderSizeCubit>().setEnabled(value);
+                      },
                     ),
-                    const Gap(4),
-                    Text(
-                      "Make the overlay wider for easier control on larger or denser screens.",
-                      style: theme.textTheme.bodyMedium,
-                    ),
-                    Slider(
-                      min: SliderSizeCubit.minSize.toDouble(),
-                      max: SliderSizeCubit.maxSize.toDouble(),
-                      divisions:
-                          SliderSizeCubit.maxSize - SliderSizeCubit.minSize,
-                      label: "${state.size} dp",
-                      value: state.size.toDouble(),
-                      onChanged: state.isLoaded
-                          ? (value) {
-                              context.read<SliderSizeCubit>().update(
-                                value.round(),
-                              );
-                            }
-                          : null,
-                    ),
+                    if (state.isCustomSizeEnabled) ...[
+                      _SizeSlider(
+                        label: "Width",
+                        value: state.widthPercent.toDouble(),
+                        min: SliderSizeCubit.minWidth.toDouble(),
+                        max: SliderSizeCubit.maxWidth.toDouble(),
+                        onChanged: state.isLoaded
+                            ? (v) =>
+                                context.read<SliderSizeCubit>().updateWidth(
+                                  v.round(),
+                                )
+                            : null,
+                        unit: "%",
+                      ),
+                      _SizeSlider(
+                        label: "Height",
+                        value: state.heightPercent.toDouble(),
+                        min: SliderSizeCubit.minHeight.toDouble(),
+                        max: SliderSizeCubit.maxHeight.toDouble(),
+                        onChanged: state.isLoaded
+                            ? (v) =>
+                                context.read<SliderSizeCubit>().updateHeight(
+                                  v.round(),
+                                )
+                            : null,
+                        unit: "%",
+                      ),
+                    ],
                   ],
                 );
               },
@@ -309,6 +288,96 @@ class _AppearanceCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _MaxVolumeCard extends StatelessWidget {
+  const _MaxVolumeCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: BlocBuilder<MaxVolumeCubit, MaxVolumeState>(
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Max Volume Limit",
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const Gap(8),
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text("Enable Limit"),
+                  value: state.isEnabled,
+                  onChanged: (value) {
+                    context.read<MaxVolumeCubit>().setEnabled(value);
+                  },
+                ),
+                if (state.isEnabled)
+                  _SizeSlider(
+                    label: "Limit",
+                    value: state.limit.toDouble(),
+                    min: 0,
+                    max: 100,
+                    onChanged: (v) =>
+                        context.read<MaxVolumeCubit>().setLimit(v.round()),
+                    unit: "%",
+                  ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _SizeSlider extends StatelessWidget {
+  const _SizeSlider({
+    required this.label,
+    required this.value,
+    required this.min,
+    required this.max,
+    required this.onChanged,
+    this.unit = "dp",
+  });
+
+  final String label;
+  final double value;
+  final double min;
+  final double max;
+  final ValueChanged<double>? onChanged;
+  final String unit;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text(label, style: theme.textTheme.bodyMedium),
+            const Spacer(),
+            Text("${value.round()}$unit", style: theme.textTheme.bodySmall),
+          ],
+        ),
+        Slider(
+          min: min,
+          max: max,
+          divisions: (max - min).round() > 0 ? (max - min).round() : 1,
+          value: value,
+          onChanged: onChanged,
+        ),
+      ],
     );
   }
 }
@@ -321,33 +390,24 @@ class _PermissionsCard extends StatelessWidget {
     return Card(
       child: BlocBuilder<bpermissions.Bloc, spermissions.State>(
         builder: (context, state) {
-          final trailing = !state.isInitialized
-              ? const SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: CircularProgressIndicator(strokeWidth: 2.5),
-                )
-              : Icon(
-                  state.isGranted ? Icons.check_circle : Icons.error,
-                  color: state.isGranted
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.error,
-                );
-
-          final message = !state.isInitialized
-              ? "Retrieving permissions status..."
-              : state.isGranted
-              ? "All required permissions are granted."
-              : "Some required permissions still need attention.";
-
+          final isGranted = state.isGranted;
           return ListTile(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 8,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+            dense: true,
+            title: const Text("Permissions"),
+            subtitle: Text(
+              isGranted ? "All granted" : "Attention required",
+              style: TextStyle(
+                color: isGranted ? null : Theme.of(context).colorScheme.error,
+              ),
             ),
-            title: const Text("Permission status"),
-            subtitle: Text(message),
-            trailing: trailing,
+            trailing: Icon(
+              isGranted ? Icons.check_circle_outline : Icons.error_outline,
+              size: 20,
+              color: isGranted
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.error,
+            ),
             onTap: () {
               context.push((_) => const PermissionsScreen());
             },
@@ -363,40 +423,21 @@ class _LinksCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
       child: Column(
         children: [
           ListTile(
+            dense: true,
             title: const Text("Version"),
             subtitle: const Text(appReleaseDate),
             trailing: const Text("v$appVersion"),
           ),
           ListTile(
-            title: const Text("Created by @mkalmousli"),
-            subtitle: const Text("https://mkalmousli.dev"),
-            trailing: SvgPicture.asset("images/mk.svg"),
-            onTap: () async {
-              await launchUrlString(
-                "https://mkalmousli.dev",
-                mode: LaunchMode.externalApplication,
-              );
-            },
-          ),
-          ListTile(
-            title: const Text("Report an issue"),
-            subtitle: const Text("Open GitHub issues"),
-            trailing: const Icon(Icons.bug_report_outlined),
-            onTap: () async {
-              await launchUrlString(
-                "https://github.com/mkalmousli/FloatingVolume/issues",
-                mode: LaunchMode.externalApplication,
-              );
-            },
-          ),
-          ListTile(
+            dense: true,
+            leading: const Icon(Icons.favorite, color: Colors.red, size: 20),
             title: const Text("Support development"),
             subtitle: const Text("Buy me a coffee on Ko-fi"),
-            trailing: const Icon(Icons.favorite_border),
             onTap: () async {
               await launchUrlString(
                 "https://www.ko-fi.com/mkalmousli",
@@ -405,20 +446,22 @@ class _LinksCard extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text("License"),
-            subtitle: const Text("GPL-3.0"),
-            trailing: const Icon(Icons.open_in_new),
+            dense: true,
+            leading: const Icon(Icons.language, size: 20),
+            title: const Text("Developer Website"),
+            subtitle: const Text("mkalmousli.dev"),
             onTap: () async {
               await launchUrlString(
-                "https://www.gnu.org/licenses/gpl-3.0.html",
+                "https://mkalmousli.dev",
                 mode: LaunchMode.externalApplication,
               );
             },
           ),
           ListTile(
+            dense: true,
             title: const Text("Source code"),
-            subtitle: const Text("View the project on GitHub"),
-            trailing: const Icon(Icons.code),
+            subtitle: const Text("GitHub"),
+            trailing: const Icon(Icons.code, size: 20),
             onTap: () async {
               await launchUrlString(
                 "https://github.com/mkalmousli/FloatingVolume",
@@ -427,9 +470,9 @@ class _LinksCard extends StatelessWidget {
             },
           ),
           ListTile(
+            dense: true,
             title: const Text("Third-party libraries"),
-            subtitle: const Text("Review licenses for dependencies"),
-            trailing: const Icon(Icons.info_outline),
+            trailing: const Icon(Icons.info_outline, size: 20),
             onTap: () {
               showLicensePage(context: context);
             },

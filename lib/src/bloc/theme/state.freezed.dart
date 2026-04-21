@@ -78,10 +78,11 @@ String toString() {
 
 
 class Known extends State {
-   Known(this.theme): super._();
+   Known(this.theme, this.useMaterial3): super._();
   
 
  final  Theme theme;
+ final  bool useMaterial3;
 
 /// Create a copy of State
 /// with the given fields replaced by the non-null parameter values.
@@ -93,16 +94,16 @@ $KnownCopyWith<Known> get copyWith => _$KnownCopyWithImpl<Known>(this, _$identit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Known&&(identical(other.theme, theme) || other.theme == theme));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Known&&(identical(other.theme, theme) || other.theme == theme)&&(identical(other.useMaterial3, useMaterial3) || other.useMaterial3 == useMaterial3));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,theme);
+int get hashCode => Object.hash(runtimeType,theme,useMaterial3);
 
 @override
 String toString() {
-  return 'State.known(theme: $theme)';
+  return 'State.known(theme: $theme, useMaterial3: $useMaterial3)';
 }
 
 
@@ -113,7 +114,7 @@ abstract mixin class $KnownCopyWith<$Res> implements $StateCopyWith<$Res> {
   factory $KnownCopyWith(Known value, $Res Function(Known) _then) = _$KnownCopyWithImpl;
 @useResult
 $Res call({
- Theme theme
+ Theme theme, bool useMaterial3
 });
 
 
@@ -130,10 +131,11 @@ class _$KnownCopyWithImpl<$Res>
 
 /// Create a copy of State
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? theme = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? theme = null,Object? useMaterial3 = null,}) {
   return _then(Known(
 null == theme ? _self.theme : theme // ignore: cast_nullable_to_non_nullable
-as Theme,
+as Theme,null == useMaterial3 ? _self.useMaterial3 : useMaterial3 // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

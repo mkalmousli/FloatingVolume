@@ -140,4 +140,70 @@ as s.Theme,
 
 }
 
+/// @nodoc
+
+
+class ToggleMaterial3 extends Event {
+   ToggleMaterial3(this.useMaterial3): super._();
+  
+
+ final  bool useMaterial3;
+
+/// Create a copy of Event
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ToggleMaterial3CopyWith<ToggleMaterial3> get copyWith => _$ToggleMaterial3CopyWithImpl<ToggleMaterial3>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ToggleMaterial3&&(identical(other.useMaterial3, useMaterial3) || other.useMaterial3 == useMaterial3));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,useMaterial3);
+
+@override
+String toString() {
+  return 'Event.toggleMaterial3(useMaterial3: $useMaterial3)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ToggleMaterial3CopyWith<$Res> implements $EventCopyWith<$Res> {
+  factory $ToggleMaterial3CopyWith(ToggleMaterial3 value, $Res Function(ToggleMaterial3) _then) = _$ToggleMaterial3CopyWithImpl;
+@useResult
+$Res call({
+ bool useMaterial3
+});
+
+
+
+
+}
+/// @nodoc
+class _$ToggleMaterial3CopyWithImpl<$Res>
+    implements $ToggleMaterial3CopyWith<$Res> {
+  _$ToggleMaterial3CopyWithImpl(this._self, this._then);
+
+  final ToggleMaterial3 _self;
+  final $Res Function(ToggleMaterial3) _then;
+
+/// Create a copy of Event
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? useMaterial3 = null,}) {
+  return _then(ToggleMaterial3(
+null == useMaterial3 ? _self.useMaterial3 : useMaterial3 // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
 // dart format on

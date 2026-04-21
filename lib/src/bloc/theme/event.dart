@@ -8,4 +8,5 @@ sealed class Event with _$Event {
   const Event._();
   factory Event.initialize() = Initialize;
   factory Event.change(s.Theme newTheme) = Change;
+  factory Event.toggleMaterial3(bool useMaterial3) = ToggleMaterial3;
 }

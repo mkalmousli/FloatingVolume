@@ -70,15 +70,84 @@ class NativeApiImpl(
 //        TODO("Not yet implemented")
     }
 
-    override fun getSliderSize(callback: (Result<Long>) -> Unit) {
+    override fun getSliderWidthPercent(callback: (Result<Long>) -> Unit) {
         scope.inMain {
-            callback(Result.success(SliderSizeBloc.state.value.toLong()))
+            callback(Result.success(SliderSizeBloc.state.value.widthPercent.toLong()))
         }
     }
 
-    override fun setSliderSize(sliderSize: Long, callback: (Result<Unit>) -> Unit) {
+    override fun setSliderWidthPercent(widthPercent: Long, callback: (Result<Unit>) -> Unit) {
         scope.inIO {
-            SliderSizeBloc.set(context, sliderSize.toInt())
+            SliderSizeBloc.setWidthPercent(context, widthPercent.toInt())
+            inMain {
+                callback(Result.success(Unit))
+            }
+        }
+    }
+
+    override fun getSliderHeightPercent(callback: (Result<Long>) -> Unit) {
+        scope.inMain {
+            callback(Result.success(SliderSizeBloc.state.value.heightPercent.toLong()))
+        }
+    }
+
+    override fun setSliderHeightPercent(heightPercent: Long, callback: (Result<Unit>) -> Unit) {
+        scope.inIO {
+            SliderSizeBloc.setHeightPercent(context, heightPercent.toInt())
+            inMain {
+                callback(Result.success(Unit))
+            }
+        }
+    }
+
+    override fun getCustomSizeEnabled(callback: (Result<Boolean>) -> Unit) {
+        scope.inMain {
+            callback(Result.success(SliderSizeBloc.state.value.isCustomSizeEnabled))
+        }
+    }
+
+    override fun setCustomSizeEnabled(enabled: Boolean, callback: (Result<Unit>) -> Unit) {
+        scope.inIO {
+            SliderSizeBloc.setEnabled(context, enabled)
+            inMain {
+                callback(Result.success(Unit))
+            }
+        }
+    }
+
+    override fun setDarkTheme(isDark: Boolean, callback: (Result<Unit>) -> Unit) {
+        scope.inIO {
+            DarkModeBloc.set(context, isDark)
+            inMain {
+                callback(Result.success(Unit))
+            }
+        }
+    }
+
+    override fun getMaxVolumeLimitEnabled(callback: (Result<Boolean>) -> Unit) {
+        scope.inMain {
+            callback(Result.success(MaxVolumeLimitBloc.state.value.isEnabled))
+        }
+    }
+
+    override fun setMaxVolumeLimitEnabled(enabled: Boolean, callback: (Result<Unit>) -> Unit) {
+        scope.inIO {
+            MaxVolumeLimitBloc.setEnabled(context, enabled)
+            inMain {
+                callback(Result.success(Unit))
+            }
+        }
+    }
+
+    override fun getMaxVolumeLimit(callback: (Result<Long>) -> Unit) {
+        scope.inMain {
+            callback(Result.success(MaxVolumeLimitBloc.state.value.limit.toLong()))
+        }
+    }
+
+    override fun setMaxVolumeLimit(maxVolume: Long, callback: (Result<Unit>) -> Unit) {
+        scope.inIO {
+            MaxVolumeLimitBloc.setLimit(context, maxVolume.toInt())
             inMain {
                 callback(Result.success(Unit))
             }

@@ -7,6 +7,8 @@ import android.widget.LinearLayout
 import androidx.core.view.marginTop
 import androidx.core.view.updateMargins
 import androidx.core.view.updateLayoutParams
+import com.github.mkalmousli.floating_volume.bloc.DarkModeBloc
+import com.github.mkalmousli.floating_volume.bloc.MaxVolumeLimitBloc
 import com.github.mkalmousli.floating_volume.bloc.SliderSizeBloc
 import com.github.mkalmousli.floating_volume.bloc.SystemVolumeBloc
 import kotlinx.coroutines.CoroutineScope
@@ -32,14 +34,7 @@ class FloatingVolumeView(
         CoolSlider(context).apply {
             min.value = 0
             max.value = audioManager.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC)
-            setBackgroundColor(
-                0xFFCCCCCC.toInt()
-            )
 
-            layoutParams = LayoutParams(
-                context.dp(Const.DEFAULT_SLIDER_SIZE_DP),
-                context.dp(320)
-            )
             orientation.value = CoolSlider.Orientation.Vertical
 
 
@@ -77,7 +72,7 @@ class FloatingVolumeView(
             alpha = 0.5f
 
             val size = min(
-                context.dp(Const.DEFAULT_SLIDER_SIZE_DP),
+                context.dp(Const.DEFAULT_SLIDER_WIDTH_DP),
                 context.dp(56)
             )
             layoutParams = LayoutParams(
@@ -91,19 +86,44 @@ class FloatingVolumeView(
         }
     }
 
-    private fun applySliderSize(sizeDp: Int) {
-        val width = context.dp(sizeDp)
+    private fun applySliderSize(state: SliderSizeBloc.State) {
+        val displayMetrics = context.resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+        val screenHeight = displayMetrics.heightPixels
+
+        val width = if (state.isCustomSizeEnabled) {
+            (screenWidth * state.widthPercent / 100)
+        } else {
+            context.dp(56)
+        }
+
+        val height = if (state.isCustomSizeEnabled) {
+            (screenHeight * state.heightPercent / 100)
+        } else {
+            context.dp(320)
+        }
+
         val handleSize = maxOf(width, context.dp(56))
 
         slider.updateLayoutParams<LayoutParams> {
             this.width = width
-            height = context.dp(320)
+            this.height = height
         }
 
         handleIv.updateLayoutParams<LayoutParams> {
             this.width = handleSize
-            height = handleSize
+            this.height = handleSize
             updateMargins(top = context.dp(12))
+        }
+    }
+
+    private fun applyTheme(isDark: Boolean) {
+        if (isDark) {
+            slider.setBackgroundColor(0xFF121212.toInt())
+            slider.progressView.setBackgroundColor(0xFF4CAF50.toInt())
+        } else {
+            slider.setBackgroundColor(0xFFFFFFFF.toInt())
+            slider.progressView.setBackgroundColor(0xFF0F766E.toInt())
         }
     }
 
@@ -114,9 +134,31 @@ class FloatingVolumeView(
         addView(handleIv)
 
         scope.inIO {
-            SliderSizeBloc.state.collectLatest { sizeDp ->
+            SliderSizeBloc.state.collectLatest { state ->
                 inMain {
-                    applySliderSize(sizeDp)
+                    applySliderSize(state)
+                }
+            }
+        }
+
+        scope.inIO {
+            DarkModeBloc.state.collectLatest { isDark ->
+                inMain {
+                    applyTheme(isDark)
+                }
+            }
+        }
+
+        scope.inIO {
+            MaxVolumeLimitBloc.state.collectLatest { limitState ->
+                val maxVolume = audioManager.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC)
+                val limit = if (limitState.isEnabled) {
+                    (maxVolume * limitState.limit / 100)
+                } else {
+                    maxVolume
+                }
+                inMain {
+                    slider.max.value = limit
                 }
             }
         }

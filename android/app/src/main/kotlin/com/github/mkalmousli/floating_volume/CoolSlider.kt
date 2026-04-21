@@ -26,7 +26,7 @@ class CoolSlider(
     val isEnabled = MutableStateFlow(true)
     val orientation = MutableStateFlow(Orientation.Horizontal)
 
-    private val progressView by lazy {
+    val progressView by lazy {
         View(context).apply {
             setBackgroundColor(
                 0xFF4CAF50.toInt()

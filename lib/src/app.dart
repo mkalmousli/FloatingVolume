@@ -1,5 +1,7 @@
+import 'package:floating_volume/src/bloc/max_volume/cubit.dart';
 import 'package:floating_volume/src/bloc/slider_size/cubit.dart';
 import 'package:floating_volume/src/screens/home.dart';
+import 'package:floating_volume/src/single.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,6 +39,7 @@ class FloatingVolumeApp extends StatelessWidget {
         create: (_) => btheme.Bloc()..add(etheme.Event.initialize()),
       ),
       BlocProvider(create: (_) => SliderSizeCubit()..initialize()),
+      BlocProvider(create: (_) => MaxVolumeCubit()..initialize()),
     ],
     child: const _FloatingVolumeAppView(),
   );
@@ -45,18 +48,18 @@ class FloatingVolumeApp extends StatelessWidget {
 class _FloatingVolumeAppView extends StatelessWidget {
   const _FloatingVolumeAppView();
 
-  ThemeData _buildTheme(ColorScheme colorScheme) {
+  ThemeData _buildTheme(ColorScheme colorScheme, bool useMaterial3) {
     return ThemeData(
-      useMaterial3: true,
+      useMaterial3: useMaterial3,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: colorScheme.surface,
       cardTheme: CardThemeData(
         color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.42),
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       listTileTheme: ListTileThemeData(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       sliderTheme: SliderThemeData(
         activeTrackColor: colorScheme.primary,
@@ -91,6 +94,15 @@ class _FloatingVolumeAppView extends StatelessWidget {
         stheme.Theme.system => ThemeMode.system,
       };
 
+      // Sync theme to native overlay
+      final isDark = switch (state.theme) {
+        stheme.Theme.dark => true,
+        stheme.Theme.light => false,
+        stheme.Theme.system =>
+          MediaQuery.platformBrightnessOf(context) == Brightness.dark,
+      };
+      nativeApi.setDarkTheme(isDark);
+
       return MaterialApp(
         home: const HomeScreen(),
         themeMode: themeMode,
@@ -99,12 +111,15 @@ class _FloatingVolumeAppView extends StatelessWidget {
             seedColor: const Color(0xFF0F766E),
             brightness: Brightness.light,
           ),
+          state.useMaterial3,
         ),
         darkTheme: _buildTheme(
           ColorScheme.fromSeed(
             seedColor: const Color(0xFF7DD3C7),
             brightness: Brightness.dark,
+            surface: const Color(0xFF121212),
           ),
+          state.useMaterial3,
         ),
       );
     },

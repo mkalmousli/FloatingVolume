@@ -98,6 +98,12 @@ class MainActivity : FlutterActivity() {
                 SliderSizeBloc.initialize(c)
             }
             inIO {
+                MaxVolumeLimitBloc.initialize(c)
+            }
+            inIO {
+                DarkModeBloc.initialize(c)
+            }
+            inIO {
                 PositionBloc.handleOrientationChanges(c)
             }
             inIO {

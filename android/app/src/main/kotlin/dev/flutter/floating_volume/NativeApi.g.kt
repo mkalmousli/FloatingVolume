@@ -124,16 +124,70 @@ interface NativeApi {
   fun setMinVolume(minVolume: Long, callback: (Result<Unit>) -> Unit)
   /**
    *
-   * Returns the saved slider size in density-independent pixels.
+   * Returns the saved slider width in percentage (0-100).
    *
    */
-  fun getSliderSize(callback: (Result<Long>) -> Unit)
+  fun getSliderWidthPercent(callback: (Result<Long>) -> Unit)
   /**
    *
-   * Updates the slider size in density-independent pixels.
+   * Updates the slider width in percentage (0-100).
    *
    */
-  fun setSliderSize(sliderSize: Long, callback: (Result<Unit>) -> Unit)
+  fun setSliderWidthPercent(widthPercent: Long, callback: (Result<Unit>) -> Unit)
+  /**
+   *
+   * Returns the saved slider height in percentage (0-100).
+   *
+   */
+  fun getSliderHeightPercent(callback: (Result<Long>) -> Unit)
+  /**
+   *
+   * Updates the slider height in percentage (0-100).
+   *
+   */
+  fun setSliderHeightPercent(heightPercent: Long, callback: (Result<Unit>) -> Unit)
+  /**
+   *
+   * Returns if custom size is enabled.
+   *
+   */
+  fun getCustomSizeEnabled(callback: (Result<Boolean>) -> Unit)
+  /**
+   *
+   * Enables or disables custom slider size.
+   *
+   */
+  fun setCustomSizeEnabled(enabled: Boolean, callback: (Result<Unit>) -> Unit)
+  /**
+   *
+   * Updates the theme mode of the floating volume widget.
+   *
+   */
+  fun setDarkTheme(isDark: Boolean, callback: (Result<Unit>) -> Unit)
+  /**
+   *
+   * Returns if the maximum volume limit is enabled.
+   *
+   */
+  fun getMaxVolumeLimitEnabled(callback: (Result<Boolean>) -> Unit)
+  /**
+   *
+   * Enables or disables the maximum volume limit.
+   *
+   */
+  fun setMaxVolumeLimitEnabled(enabled: Boolean, callback: (Result<Unit>) -> Unit)
+  /**
+   *
+   * Returns the saved maximum volume limit.
+   *
+   */
+  fun getMaxVolumeLimit(callback: (Result<Long>) -> Unit)
+  /**
+   *
+   * Updates the maximum volume limit.
+   *
+   */
+  fun setMaxVolumeLimit(maxVolume: Long, callback: (Result<Unit>) -> Unit)
   /**
    *
    * Show a toast
@@ -257,10 +311,10 @@ interface NativeApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.getSliderSize$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.getSliderWidthPercent$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
-            api.getSliderSize{ result: Result<Long> ->
+            api.getSliderWidthPercent{ result: Result<Long> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(NativeApiPigeonUtils.wrapError(error))
@@ -275,12 +329,179 @@ interface NativeApi {
         }
       }
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.setSliderSize$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.setSliderWidthPercent$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { message, reply ->
             val args = message as List<Any?>
-            val sliderSizeArg = args[0] as Long
-            api.setSliderSize(sliderSizeArg) { result: Result<Unit> ->
+            val widthPercentArg = args[0] as Long
+            api.setSliderWidthPercent(widthPercentArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NativeApiPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(NativeApiPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.getSliderHeightPercent$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.getSliderHeightPercent{ result: Result<Long> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NativeApiPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(NativeApiPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.setSliderHeightPercent$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val heightPercentArg = args[0] as Long
+            api.setSliderHeightPercent(heightPercentArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NativeApiPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(NativeApiPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.getCustomSizeEnabled$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.getCustomSizeEnabled{ result: Result<Boolean> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NativeApiPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(NativeApiPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.setCustomSizeEnabled$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val enabledArg = args[0] as Boolean
+            api.setCustomSizeEnabled(enabledArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NativeApiPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(NativeApiPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.setDarkTheme$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val isDarkArg = args[0] as Boolean
+            api.setDarkTheme(isDarkArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NativeApiPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(NativeApiPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.getMaxVolumeLimitEnabled$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.getMaxVolumeLimitEnabled{ result: Result<Boolean> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NativeApiPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(NativeApiPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.setMaxVolumeLimitEnabled$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val enabledArg = args[0] as Boolean
+            api.setMaxVolumeLimitEnabled(enabledArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NativeApiPigeonUtils.wrapError(error))
+              } else {
+                reply.reply(NativeApiPigeonUtils.wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.getMaxVolumeLimit$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            api.getMaxVolumeLimit{ result: Result<Long> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(NativeApiPigeonUtils.wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(NativeApiPigeonUtils.wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.floating_volume.NativeApi.setMaxVolumeLimit$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val maxVolumeArg = args[0] as Long
+            api.setMaxVolumeLimit(maxVolumeArg) { result: Result<Unit> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(NativeApiPigeonUtils.wrapError(error))
